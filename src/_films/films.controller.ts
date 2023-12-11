@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { FilmsService } from './films.service';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { FindAllFilmsSwagger, FindOneFilmSwagger } from './films.swagger';
 
 @ApiTags('Films')
 @Controller('films')
@@ -8,22 +9,7 @@ export class FilmsController {
   constructor(private filmsService: FilmsService) {}
 
   @Get('/')
-  @ApiOperation({
-    summary: 'Get all films',
-    description: 'Get a list of all films',
-  })
-  @ApiQuery({
-    name: 'pageNumber',
-    type: Number,
-    required: false,
-    description: 'Page number',
-  })
-  @ApiQuery({
-    name: 'pageSize',
-    type: Number,
-    required: false,
-    description: 'Page Size',
-  })
+  @FindAllFilmsSwagger()
   async findAll(
     @Query('pageNumber') pageNumber: number | undefined,
     @Query('pageSize') pageSize: number | undefined,
@@ -32,11 +18,7 @@ export class FilmsController {
   }
 
   @Get(':filmId')
-  @ApiOperation({
-    summary: 'Get a single film',
-    description: 'Get details for a specific film',
-  })
-  @ApiParam({ name: 'filmId', type: Number, description: 'Film ID ' })
+  @FindOneFilmSwagger()
   async findOne(@Param('filmId') filmId: number) {
     return await this.filmsService.findOne(filmId);
   }

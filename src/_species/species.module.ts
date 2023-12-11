@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SpeciesService } from './species.service';
-import { SpeciesController } from './_species.controller';
+import { SpeciesController } from './species.controller';
 
 @Module({
   providers: [SpeciesService],
