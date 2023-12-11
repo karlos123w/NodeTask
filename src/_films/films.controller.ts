@@ -7,8 +7,8 @@ export class FilmsController {
 
   @Get()
   async findAll(
-    @Query('pageNumber') pageNumber: number = 1,
-    @Query('pageSize') pageSize: number = 10,
+    @Query('pageNumber') pageNumber: number | undefined,
+    @Query('pageSize') pageSize: number | undefined,
   ) {
     return await this.filmsService.findAll(pageNumber, pageSize);
   }

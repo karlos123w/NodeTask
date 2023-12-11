@@ -3,12 +3,16 @@ import axios from 'axios';
 
 @Injectable()
 export class FilmsService {
-  async findAll(pageNumber = 1, pageSize = 10) {
+  async findAll(pageNumber: number | undefined, pageSize: number | undefined) {
     try {
-      const response = await axios.get(
-        `https://swapi.dev/api/films/?page=${pageNumber}&page_size=${pageSize}`,
-      );
-      return response.data;
+      const response = await axios.get(`https://swapi.dev/api/films`);
+      const films = response.data.results;
+
+      if (!pageNumber) return films;
+      else {
+        const startIndex = (pageNumber - 1) * pageSize;
+        return films.slice(startIndex, pageSize + startIndex);
+      }
     } catch (error) {
       throw new BadRequestException(
         'Something went wrong during fetching films',
