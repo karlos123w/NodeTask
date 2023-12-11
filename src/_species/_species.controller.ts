@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { SpeciesService } from './species.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Species')
 @Controller('species')
 export class SpeciesController {
   constructor(private speciesService: SpeciesService) {}
