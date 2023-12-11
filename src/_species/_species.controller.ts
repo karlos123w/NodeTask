@@ -12,7 +12,7 @@ export class SpeciesController {
     @Query('pageNumber') pageNumber: number | undefined,
     @Query('pageSize') pageSize: number | undefined,
   ) {
-    return await this.speciesService.findAll(pageNumber, pageSize);
+    return await this.speciesService.findAll(+pageNumber, +pageSize);
   }
 
   @Get(':speciesId')
