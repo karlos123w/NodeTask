@@ -9,10 +9,25 @@ import { VehiclesService } from './_vehicles/vehicles.service';
 import { VehiclesModule } from './_vehicles/vehicles.module';
 import { StarshipsService } from './_starships/starships.service';
 import { StarshipsModule } from './_starships/starships.module';
+import { PlanetsService } from './_planets/planets.service';
+import { PlanetsModule } from './_planets/planets.module';
+import { PlanetsController } from './_planets/planets.controller';
 
 @Module({
-  imports: [FilmsModule, SpeciesModule, VehiclesModule, StarshipsModule],
-  controllers: [AppController, VehiclesController],
-  providers: [AppService, FilmsService, VehiclesService, StarshipsService],
+  imports: [
+    FilmsModule,
+    SpeciesModule,
+    VehiclesModule,
+    StarshipsModule,
+    PlanetsModule,
+  ],
+  controllers: [AppController, VehiclesController, PlanetsController],
+  providers: [
+    AppService,
+    FilmsService,
+    VehiclesService,
+    StarshipsService,
+    PlanetsService,
+  ],
 })
 export class AppModule {}
