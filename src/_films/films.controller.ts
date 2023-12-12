@@ -22,6 +22,11 @@ export class FilmsController {
     return await this.filmsService.findUniqueWordsFromOpeningCrawls();
   }
 
+  @Get('find-most-frequent-name')
+  async findMostFrequentName() {
+    return await this.filmsService.findMostFrequentName();
+  }
+
   @Get(':filmId')
   @FindOneFilmSwagger()
   async findOne(@Param('filmId') filmId: number) {

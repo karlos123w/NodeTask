@@ -43,9 +43,6 @@ export class FilmsService {
         .toLowerCase()
         .split(' ')
         .filter((word) => word.trim() !== '');
-
-        console.log(openingCrawlWords);
-        
       words.push(...openingCrawlWords);
     });
 
@@ -55,5 +52,53 @@ export class FilmsService {
       wordFrequency[word] = (wordFrequency[word] || 0) + 1;
     });
     return wordFrequency;
+  }
+
+  async findPeopleName(name: string): Promise<any[]> {
+    try {
+      const response = await axios.get(`https://swapi.dev/api/people`);
+      const people = response.data.results.filter((person: any) =>
+        person.name.toLowerCase().includes(name.toLowerCase()),
+      );
+      return people;
+    } catch (error) {
+      throw new BadRequestException(
+        'Something went wrong during fetching Peoples',
+      );
+    }
+  }
+
+  async findMostFrequentName() {
+    const foundAllFilms = await this.findAll(undefined, undefined);
+    const words: string[] = [];
+
+    foundAllFilms.forEach((film: any) => {
+      const openingCrawlWords = film.opening_crawl
+        .replace(/[^a-zA-Z ]/g, '')
+        .toLowerCase()
+        .split(' ')
+        .filter((word) => word.trim() !== '');
+      words.push(...openingCrawlWords);
+      console.log(openingCrawlWords);
+    });
+
+    const characterCounts = new Map<string, number>();
+
+    for (const word of words) {
+      const matchingCharacters = await this.findPeopleName(word);
+
+      matchingCharacters.forEach((character) => {
+        const characterName = character.name;
+        const count = characterCounts.get(characterName) || 0;
+        characterCounts.set(characterName, count + 1);
+      });
+
+      const maxCount = Math.max(...characterCounts.values());
+      const mostFrequentCharacters = Array.from(characterCounts.entries())
+        .filter(([_, count]) => count === maxCount)
+        .map(([characterName]) => characterName);
+
+      return mostFrequentCharacters.length > 0 ? mostFrequentCharacters : null;
+    }
   }
 }
