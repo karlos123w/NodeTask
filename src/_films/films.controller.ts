@@ -17,6 +17,11 @@ export class FilmsController {
     return await this.filmsService.findAll(+pageNumber, +pageSize);
   }
 
+  @Get('find-unique-words-from-opening-crawls')
+  async findUniqueWordsFromOpeningCrawls() {
+    return await this.filmsService.findUniqueWordsFromOpeningCrawls();
+  }
+
   @Get(':filmId')
   @FindOneFilmSwagger()
   async findOne(@Param('filmId') filmId: number) {

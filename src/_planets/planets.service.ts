@@ -10,8 +10,6 @@ export class PlanetsService {
       const planets = response.data.results;
 
       if (!pageNumber) return planets;
-    //   if (pageSize === undefined && pageNumber > 1) return planets;
-    
       else {
         const startIndex = (pageNumber - 1) * size;
         return planets.slice(startIndex, size + startIndex);

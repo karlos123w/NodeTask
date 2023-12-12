@@ -33,4 +33,27 @@ export class FilmsService {
       );
     }
   }
+  async findUniqueWordsFromOpeningCrawls() {
+    const foundAllFilms = await this.findAll(undefined, undefined);
+    const words: string[] = [];
+
+    foundAllFilms.forEach((film: any) => {
+      const openingCrawlWords = film.opening_crawl
+        .replace(/[^a-zA-Z ]/g, '')
+        .toLowerCase()
+        .split(' ')
+        .filter((word) => word.trim() !== '');
+
+        console.log(openingCrawlWords);
+        
+      words.push(...openingCrawlWords);
+    });
+
+    const wordFrequency: { [key: string]: number } = {};
+
+    words.forEach((word) => {
+      wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+    });
+    return wordFrequency;
+  }
 }
