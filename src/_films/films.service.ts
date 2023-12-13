@@ -1,8 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
 export class FilmsService {
+  constructor() {}
+
   async findAll(pageNumber: number | undefined, pageSize: number | undefined) {
     try {
       const size = pageSize ? pageSize : 10;
@@ -12,7 +14,9 @@ export class FilmsService {
       if (!pageNumber) return films;
       else {
         const startIndex = (pageNumber - 1) * size;
-        return films.slice(startIndex, size + startIndex);
+        const slicedFilms = films.slice(startIndex, size + startIndex);
+
+        return slicedFilms;
       }
     } catch (error) {
       throw new BadRequestException(
@@ -33,6 +37,7 @@ export class FilmsService {
       );
     }
   }
+
   async findUniqueWordsFromOpeningCrawls() {
     const foundAllFilms = await this.findAll(undefined, undefined);
     const words: string[] = [];
@@ -51,6 +56,7 @@ export class FilmsService {
     words.forEach((word) => {
       wordFrequency[word] = (wordFrequency[word] || 0) + 1;
     });
+
     return wordFrequency;
   }
 
@@ -79,7 +85,6 @@ export class FilmsService {
         .split(' ')
         .filter((word) => word.trim() !== '');
       words.push(...openingCrawlWords);
-      console.log(openingCrawlWords);
     });
 
     const characterCounts = new Map<string, number>();
@@ -98,7 +103,10 @@ export class FilmsService {
         .filter(([_, count]) => count === maxCount)
         .map(([characterName]) => characterName);
 
-      return mostFrequentCharacters.length > 0 ? mostFrequentCharacters : null;
+      const mostFrequentNames =
+        mostFrequentCharacters.length > 0 ? mostFrequentCharacters : null;
+
+      return mostFrequentNames;
     }
   }
 }

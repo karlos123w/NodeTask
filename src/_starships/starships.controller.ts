@@ -1,13 +1,18 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
 import { StarshipsService } from './starships.service';
 import {
   FindAllStarsipsSwagger,
   FindOneStarshipSwagger,
 } from './starships.swagger';
+import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
+import { appConfig } from 'config';
 
 @Controller('starships')
 export class StarshipsController {
-  constructor(private starshipsService: StarshipsService) {}
+  constructor(
+    private starshipsService: StarshipsService,
+    @Inject(CACHE_MANAGER) private readonly cacheService: CacheStore,
+  ) {}
 
   @Get('/')
   @FindAllStarsipsSwagger()
@@ -15,12 +20,36 @@ export class StarshipsController {
     @Query('pageNumber') pageNumber: number | undefined,
     @Query('pageSize') pageSize: number | undefined,
   ) {
-    return await this.starshipsService.findAll(+pageNumber, +pageSize);
+    const key = `get_starships_${pageNumber}_${pageSize}`;
+    const cachedData = await this.cacheService.get(key);
+
+    if (cachedData) {
+      return cachedData;
+    } else {
+      const newData = await this.starshipsService.findAll(
+        +pageNumber,
+        +pageSize,
+      );
+
+      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+
+      return newData;
+    }
   }
 
   @Get(':starshipId')
   @FindOneStarshipSwagger()
   async findOne(@Param('starshipId') starshipId: number) {
-    return await this.starshipsService.findOne(starshipId);
+    const key = `get_starship:${starshipId}`;
+    const cachedData = await this.cacheService.get(key);
+
+    if (cachedData) {
+      return cachedData;
+    } else {
+      const newData = await this.starshipsService.findOne(starshipId);
+
+      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      return newData;
+    }
   }
 }

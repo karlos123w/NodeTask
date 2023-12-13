@@ -1,18 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FilmsService } from './films.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+
+const mockCacheManager = {
+  set: jest.fn(),
+  get: jest.fn(),
+};
 
 describe('FilmsService', () => {
-  let service: FilmsService;
+  let filmService: FilmsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FilmsService],
+      imports: [],
+      controllers: [],
+      providers: [
+        FilmsService,
+        {
+          provide: CACHE_MANAGER,
+          useValue: mockCacheManager,
+        },
+      ],
     }).compile();
 
-    service = module.get<FilmsService>(FilmsService);
+    filmService = module.get<FilmsService>(FilmsService);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(filmService).toBeDefined();
   });
 });
