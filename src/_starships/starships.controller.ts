@@ -5,9 +5,11 @@ import {
   FindOneStarshipSwagger,
 } from './starships.swagger';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
+import { ApiTags } from '@nestjs/swagger';
 
 const CACHE_TIME = 1000 * 60 * 60 * 24;
 
+@ApiTags('Starships')
 @Controller('starships')
 export class StarshipsController {
   constructor(

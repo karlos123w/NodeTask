@@ -20,3 +20,6 @@ $ npm run start
 ```bash
 $ npm run test
 ```
+
+## Api documentation 
+http://localhost:3009/api#/

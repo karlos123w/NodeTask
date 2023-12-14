@@ -2,9 +2,11 @@ import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
 import { PlanetsService } from './planets.service';
 import { FindAllPlanetsSwagger, FindOnePlanetSwagger } from './planets.swagger';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
+import { ApiTags } from '@nestjs/swagger';
 
 const CACHE_TIME = 1000 * 60 * 60 * 24;
 
+@ApiTags('Planets')
 @Controller('planets')
 export class PlanetsController {
   constructor(

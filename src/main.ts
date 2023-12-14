@@ -14,6 +14,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3009);
+  await app.listen(3009, async () => {
+    console.log('Server listening on port: 3009');
+  });
 }
 bootstrap();
