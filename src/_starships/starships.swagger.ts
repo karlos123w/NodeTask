@@ -41,7 +41,7 @@ export const FindOneStarshipSwagger = () => {
       description: 'Get details for a specific starship',
     })(target, key, descriptor);
 
-    ApiParam({ name: 'startshipId', type: Number, description: 'starShipId' })(
+    ApiParam({ name: 'starshipId', type: Number, description: 'starShipId' })(
       target,
       key,
       descriptor,
