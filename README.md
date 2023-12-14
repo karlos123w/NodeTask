@@ -3,6 +3,13 @@
 ## Requiments
 Nodejs minimum: v20.10.0
 
+## Clone repository
+```bash
+$ git clone https://github.com/karlos123w/NodeTask.git
+$ cd ./NodeTask
+```
+
+
 ## Install dependencies
 
 ```bash
