@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
@@ -76,37 +76,35 @@ export class FilmsService {
 
   async findMostFrequentName() {
     const foundAllFilms = await this.findAll(undefined, undefined);
-    const words: string[] = [];
 
-    foundAllFilms.forEach((film: any) => {
-      const openingCrawlWords = film.opening_crawl
-        .replace(/[^a-zA-Z ]/g, '')
-        .toLowerCase()
-        .split(' ')
-        .filter((word) => word.trim() !== '');
-      words.push(...openingCrawlWords);
-    });
+    let openingCrawls = '';
 
-    const characterCounts = new Map<string, number>();
+    for (const singleFilm of foundAllFilms) {
+      openingCrawls = openingCrawls += singleFilm.opening_crawl;
+    }
 
-    for (const word of words) {
-      const matchingCharacters = await this.findPeopleName(word);
+    const peopleResponse = await axios.get(`https://swapi.dev/api/people`);
+    const people = peopleResponse.data.results ?? [];
+    const wordsArray: string[] = openingCrawls.split(' ');
 
-      matchingCharacters.forEach((character) => {
-        const characterName = character.name;
-        const count = characterCounts.get(characterName) || 0;
-        characterCounts.set(characterName, count + 1);
+    const peopleData: { name: string; count: number }[] = [];
+
+    for (const singlePeople of people) {
+      let count = 0;
+      const firstName = singlePeople.name.split(' ')[0];
+
+      wordsArray.forEach((singleWord) => {
+        return singleWord === firstName && count++;
       });
 
-      const maxCount = Math.max(...characterCounts.values());
-      const mostFrequentCharacters = Array.from(characterCounts.entries())
-        .filter(([_, count]) => count === maxCount)
-        .map(([characterName]) => characterName);
-
-      const mostFrequentNames =
-        mostFrequentCharacters.length > 0 ? mostFrequentCharacters : null;
-
-      return mostFrequentNames;
+      peopleData.push({ name: singlePeople.name, count: count });
     }
+
+    const sortedByTheMostFrequent = peopleData.sort((a, b) => {
+      if (a.count > b.count) return -1;
+      return 1;
+    });
+
+    return sortedByTheMostFrequent[0].name;
   }
 }

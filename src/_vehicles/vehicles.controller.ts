@@ -3,7 +3,8 @@ import { VehiclesService } from './vehicles.service';
 import { ApiTags } from '@nestjs/swagger';
 import { FindAllSwagger, FindOne } from './vehicles.swagger.ts';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { appConfig } from 'config';
+
+const CACHE_TIME = 1000 * 60 * 60 * 24;
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -30,7 +31,7 @@ export class VehiclesController {
         +pageSize,
       );
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
 
       return newData;
     }
@@ -42,15 +43,10 @@ export class VehiclesController {
     const key = `get_vehicle:${vehicleId}`;
     const cachedData = await this.cacheService.get(key);
 
-    if (cachedData) {
-      console.log('mam cache');
-      return cachedData;
-    } else {
+    if (cachedData) return cachedData;
+    else {
       const newData = await this.vehiclesService.findOne(vehicleId);
-
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
-
-      console.log('zapisałem dane  cache');
+      await this.cacheService.set(key, newData, CACHE_TIME);
       return newData;
     }
   }

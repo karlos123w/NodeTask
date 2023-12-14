@@ -5,7 +5,8 @@ import {
   FindOneStarshipSwagger,
 } from './starships.swagger';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { appConfig } from 'config';
+
+const CACHE_TIME = 1000 * 60 * 60 * 24;
 
 @Controller('starships')
 export class StarshipsController {
@@ -31,7 +32,7 @@ export class StarshipsController {
         +pageSize,
       );
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
 
       return newData;
     }
@@ -48,7 +49,7 @@ export class StarshipsController {
     } else {
       const newData = await this.starshipsService.findOne(starshipId);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
       return newData;
     }
   }

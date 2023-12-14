@@ -6,7 +6,8 @@ import {
   FindOneSpeciesSwagger,
 } from './species.swagger';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { appConfig } from 'config';
+
+const CACHE_TIME = 1000 * 60 * 60 * 24;
 
 @ApiTags('Species')
 @Controller('species')
@@ -30,7 +31,7 @@ export class SpeciesController {
     } else {
       const newData = await this.speciesService.findAll(+pageNumber, +pageSize);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
 
       return newData;
     }
@@ -47,7 +48,7 @@ export class SpeciesController {
     } else {
       const newData = await this.speciesService.findOne(speciesId);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
       return newData;
     }
   }

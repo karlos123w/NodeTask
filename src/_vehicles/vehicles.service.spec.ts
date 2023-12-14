@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { StarshipsService } from './starships.service';
+import { VehiclesService } from './vehicles.service';
 import axios from 'axios';
 import { BadRequestException } from '@nestjs/common';
 
 jest.mock('axios');
 
-describe('StarshipsService', () => {
-  let service: StarshipsService;
+describe('VehiclesService', () => {
+  let service: VehiclesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StarshipsService],
+      providers: [VehiclesService],
     }).compile();
 
-    service = module.get<StarshipsService>(StarshipsService);
+    service = module.get<VehiclesService>(VehiclesService);
   });
 
   it('should be defined', () => {
@@ -21,33 +21,33 @@ describe('StarshipsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return all starships if pageNumber is not provided', async () => {
-      const mockStarships = [
-        { id: 1, name: 'Starship 1' },
-        { id: 2, name: 'Starship 2' },
+    it('should return all vehicles if pageNumber is not provided', async () => {
+      const mockVehicles = [
+        { id: 1, name: 'Vehicle 1' },
+        { id: 2, name: 'Vehicle 2' },
       ];
       (axios.get as jest.Mock).mockResolvedValueOnce({
-        data: { results: mockStarships },
+        data: { results: mockVehicles },
       });
 
       const result = await service.findAll(undefined, 10);
 
-      expect(result).toEqual(mockStarships);
+      expect(result).toEqual(mockVehicles);
     });
 
-    it('should return a pagination starships if pageNumber is provided', async () => {
-      const mockStarships = [
-        { id: 1, name: 'Starship 1' },
-        { id: 2, name: 'Starship 2' },
-        { id: 3, name: 'Starship 3' },
+    it('should return paginated vehicles if pageNumber is provided', async () => {
+      const mockVehicles = [
+        { id: 1, name: 'Vehicle 1' },
+        { id: 2, name: 'Vehicle 2' },
+        { id: 3, name: 'Vehicle 3' },
       ];
       (axios.get as jest.Mock).mockResolvedValueOnce({
-        data: { results: mockStarships },
+        data: { results: mockVehicles },
       });
 
       const result = await service.findAll(2, 1);
 
-      expect(result).toEqual([{ id: 2, name: 'Starship 2' }]);
+      expect(result).toEqual([{ id: 2, name: 'Vehicle 2' }]);
     });
 
     it('should throw BadRequestException on error', async () => {
@@ -62,18 +62,18 @@ describe('StarshipsService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a starship if found', async () => {
-      const mockStarship = { id: 1, name: 'Starship 1' };
-      (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockStarship });
+    it('should return a vehicle if found', async () => {
+      const mockVehicle = { id: 1, name: 'Vehicle 1' };
+      (axios.get as jest.Mock).mockResolvedValueOnce({ data: mockVehicle });
 
       const result = await service.findOne(1);
 
-      expect(result).toEqual(mockStarship);
+      expect(result).toEqual(mockVehicle);
     });
 
-    it('should throw  BadRequestException if starship is not found', async () => {
+    it('should throw BadRequestException if vehicle is not found', async () => {
       (axios.get as jest.Mock).mockRejectedValueOnce({
-        Response: { status: 404 },
+        response: { status: 404 },
       });
 
       await expect(service.findOne(1)).rejects.toThrowError(

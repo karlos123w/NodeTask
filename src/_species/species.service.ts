@@ -12,7 +12,6 @@ export class SpeciesService {
       if (!pageNumber) return species;
       else {
         const startIndex = (pageNumber - 1) * size;
-        console.log('Start ', startIndex, 'End ', size + startIndex);
         return species.slice(startIndex, size + startIndex);
       }
     } catch (error) {

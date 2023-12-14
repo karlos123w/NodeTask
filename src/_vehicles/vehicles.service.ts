@@ -28,7 +28,6 @@ export class VehiclesService {
       );
       return response.data;
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(
         'Something went wrong during fetching film',
       );

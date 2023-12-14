@@ -11,7 +11,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { FindAllFilmsSwagger, FindOneFilmSwagger } from './films.swagger';
 import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { appConfig } from 'config';
+
+const CACHE_TIME = 1000 * 60 * 60 * 24;
 
 @ApiTags('Films')
 @Controller('films')
@@ -35,7 +36,7 @@ export class FilmsController {
     } else {
       const newData = await this.filmsService.findAll(+pageNumber, +pageSize);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
 
       return newData;
     }
@@ -43,7 +44,7 @@ export class FilmsController {
 
   @UseInterceptors(CacheInterceptor)
   @CacheKey('get_unique_words_key')
-  @CacheTTL(appConfig.CACHE_TIME)
+  @CacheTTL(CACHE_TIME)
   @Get('find-unique-words-from-opening-crawls')
   async findUniqueWordsFromOpeningCrawls() {
     return await this.filmsService.findUniqueWordsFromOpeningCrawls();
@@ -51,7 +52,7 @@ export class FilmsController {
 
   @UseInterceptors(CacheInterceptor)
   @CacheKey('get_frequent_name_key')
-  @CacheTTL(appConfig.CACHE_TIME)
+  @CacheTTL(CACHE_TIME)
   @Get('find-most-frequent-name')
   async findMostFrequentName() {
     return await this.filmsService.findMostFrequentName();
@@ -67,9 +68,7 @@ export class FilmsController {
       return cachedData;
     } else {
       const newData = await this.filmsService.findOne(filmId);
-
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
-
+      await this.cacheService.set(key, newData, CACHE_TIME);
       return newData;
     }
   }

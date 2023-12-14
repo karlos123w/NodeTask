@@ -2,7 +2,8 @@ import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
 import { PlanetsService } from './planets.service';
 import { FindAllPlanetsSwagger, FindOnePlanetSwagger } from './planets.swagger';
 import { CACHE_MANAGER, CacheStore } from '@nestjs/cache-manager';
-import { appConfig } from 'config';
+
+const CACHE_TIME = 1000 * 60 * 60 * 24;
 
 @Controller('planets')
 export class PlanetsController {
@@ -25,7 +26,7 @@ export class PlanetsController {
     } else {
       const newData = await this.planetsService.findAll(+pageNumber, +pageSize);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
 
       return newData;
     }
@@ -42,7 +43,7 @@ export class PlanetsController {
     } else {
       const newData = await this.planetsService.findOne(planetId);
 
-      await this.cacheService.set(key, newData, appConfig.CACHE_TIME);
+      await this.cacheService.set(key, newData, CACHE_TIME);
       return newData;
     }
   }
