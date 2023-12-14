@@ -33,10 +33,7 @@ http://localhost:3009/api#/
 
 
 
-## How to install and run project withDocker
-
-## Requiments
-Nodejs minimum: v20.10.0
+## How to install and run project with Docker
 
 ## Clone repository
 ```bash
