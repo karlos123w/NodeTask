@@ -58,14 +58,14 @@ describe('FilmsController', () => {
         .spyOn(service, 'findUniqueWordsFromOpeningCrawls')
         .mockResolvedValueOnce(mockData);
 
-      const result = await controller.findUniqueWordsFromOpeningCrawls();
+      const result = await controller.uniqueWordsOpeningsCount();
       expect(result).toEqual(mockData);
     });
   });
 
   describe('findMostFrequentName', () => {
     it('should return most frequent name from opening crawls', async () => {
-      const mockData = 'Beru whitesun';
+      const mockData = 'Luke Skywalker';
       jest
         .spyOn(service, 'findMostFrequentName')
         .mockResolvedValueOnce(mockData);

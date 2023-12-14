@@ -45,8 +45,8 @@ export class FilmsController {
   @UseInterceptors(CacheInterceptor)
   @CacheKey('get_unique_words_key')
   @CacheTTL(CACHE_TIME)
-  @Get('find-unique-words-from-opening-crawls')
-  async findUniqueWordsFromOpeningCrawls() {
+  @Get('unique-words-openings-count')
+  async uniqueWordsOpeningsCount() {
     return await this.filmsService.findUniqueWordsFromOpeningCrawls();
   }
 

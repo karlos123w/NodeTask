@@ -30,3 +30,23 @@ $ npm run test
 
 ## Api documentation 
 http://localhost:3009/api#/
+
+
+
+## How to install and run project withDocker
+
+## Requiments
+Nodejs minimum: v20.10.0
+
+## Clone repository
+```bash
+$ git clone https://github.com/karlos123w/NodeTask.git
+$ cd ./NodeTask
+```
+## 
+```bash
+$ docker compose up
+```
+
+## Api documentation 
+http://localhost:3009/api#/
